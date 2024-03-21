@@ -13,33 +13,25 @@ soup = BeautifulSoup(response.text, 'html.parser')
 # Find all hyperlinks present on webpage
 links = soup.find_all('a')
 
+#get cwd and create a folder 'Materials' with in cwd.
 cwd=os.getcwd()
-
 os.mkdir(cwd+'/'+'Materials')
-
 path= cwd+'/Materials/'
  
 i = 0
-
 urls=[]
  
-# From all links check for pdf link and
-# if present download file
+#get all the links on the webpage having 'Key-stage-1' string
 for link in links:
     if ('key-stage-1' in link.get('href')):
-        #print(link.get('href'))
         urls.append(baseurl+link.get('href'))
 
-#print(urls)
+#Parse and call each link within to download the materials.
 for each_url in urls:
     response=requests.get(each_url)
     soup1=BeautifulSoup(response.text, 'html.parser')
-
     material_links=soup1.find_all('a')
-    print('material_links')
-    print(material_links)
-
-
+    
     for m_link in material_links:
         if ('.pdf' in m_link.get('href')):
             i+=1
@@ -55,6 +47,6 @@ for each_url in urls:
             pdf = open(path+folder+'/'+name+".pdf", 'wb')
             pdf.write(response.content)
             pdf.close()
-            print("File ", i, " downloaded")
+            
 
 
